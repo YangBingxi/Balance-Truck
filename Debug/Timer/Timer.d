@@ -38,6 +38,8 @@ Timer/Timer.obj: F:/ProjectFile/ccs/Balanced_Truck/head.h
 Timer/Timer.obj: F:/ProjectFile/ccs/Balanced_Truck/colorful_LED/colorful_LED.h
 Timer/Timer.obj: F:/ProjectFile/ccs/Balanced_Truck/Pwm/pwm.h
 Timer/Timer.obj: F:/ProjectFile/ccs/Balanced_Truck/Beep/Beep.h
+Timer/Timer.obj: D:/Project_Program/Ccs/ccsv8/tools/compiler/ti-cgt-arm_18.1.2.LTS/include/limits.h
+Timer/Timer.obj: D:/Project_Program/Ccs/ccsv8/tools/compiler/ti-cgt-arm_18.1.2.LTS/include/stdlib.h
 
 ../Timer/Timer.c: 
 ../Timer/timer.h: 
@@ -77,3 +79,5 @@ F:/ProjectFile/ccs/Balanced_Truck/head.h:
 F:/ProjectFile/ccs/Balanced_Truck/colorful_LED/colorful_LED.h: 
 F:/ProjectFile/ccs/Balanced_Truck/Pwm/pwm.h: 
 F:/ProjectFile/ccs/Balanced_Truck/Beep/Beep.h: 
+D:/Project_Program/Ccs/ccsv8/tools/compiler/ti-cgt-arm_18.1.2.LTS/include/limits.h: 
+D:/Project_Program/Ccs/ccsv8/tools/compiler/ti-cgt-arm_18.1.2.LTS/include/stdlib.h: 

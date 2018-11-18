@@ -15,6 +15,8 @@
   ******************************************************************************
 **/
 #include "timer.h"
+#include<limits.h>
+#include<stdlib.h>
 
 extern uint8_t MotorOrderDirection;        //前：0  后：1  左：2  右： 3
 extern uint8_t MotorOrderDisplacement;     //前后表示距离，左右表示转向角
@@ -55,7 +57,7 @@ void MotorContolTimer(void)
         TimerConfigure(TIMER1_BASE, TIMER_CFG_PERIODIC);
 
         TimerLoadSet(TIMER0_BASE, TIMER_A,  SysCtlClockGet()/Speed-1);  //speed=20000；  10KHz方波
-        TimerLoadSet(TIMER1_BASE, TIMER_A,  SysCtlClockGet() ); //5HZ
+        TimerLoadSet(TIMER1_BASE, TIMER_A,  SysCtlClockGet()/10-1); //10HZ
 
        //
        // Setup the interrupts for the timer timeouts.
@@ -133,7 +135,7 @@ void Timer0IntHandler(void)
 
           }
     }
-    IntMasterEnable();
+   // IntMasterEnable();
 
 }
 /**
@@ -145,15 +147,29 @@ void Timer0IntHandler(void)
   *   By Sw Young
   *   2018.03.29
   */
+uint32_t t_conter=0,t_temp=0;
+uint8_t timeFlag=0;
 void Timer1IntHandler(void)
 {
     //
     // Clear the timer interrupt.
     //
     TimerIntClear(TIMER1_BASE, TIMER_TIMA_TIMEOUT);
+    if(timeFlag>0&&Flag_Stop==0)
+    {
+        t_temp++;
+        if(t_temp==10)
+        {
+            t_temp=0;
+            t_conter++;
+            if(t_conter>UINT_MAX-5)
+                t_conter=0;
+        }
 
-    UART0Send((uint8_t *)"\n UART0 Is 77!!\n\n ", 17);
-    UARTprintf("Hello 想不到吧\n");
+        UARTprintf("\r\nHello 想不到吧%d\n",t_conter);
+    }
+
+
     //
     // Update the interrupt status on the display.
     //

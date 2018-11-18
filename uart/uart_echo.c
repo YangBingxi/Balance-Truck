@@ -218,6 +218,7 @@ extern uint32_t Speed;
 extern uint8_t Car_Mode;                      //小车模式控制位，默认为遥控控制
 extern uint8_t Direction_Set;
 extern uint8_t Set_Low_Speed;
+extern uint8_t timeFlag;
 //*****************************************************************************
 //
 // The UART interrupt handler.
@@ -265,10 +266,13 @@ UART1IntHandler(void)
     {
         Direction_Set = 1;
         Set_Low_Speed = 0;
+
         Counter = 0; //计数清零
         TimerEnable(TIMER0_BASE, TIMER_A);
         FlagSend = 1;
         MotorOrderDirection = 1;//前：0  后：1  左：2  右： 3
+        timeFlag = 1;
+
         Beep_Flag = 1;
         Beep_Counter = 0;
         Beep_Fre = 50;
@@ -283,6 +287,7 @@ UART1IntHandler(void)
         TimerEnable(TIMER0_BASE, TIMER_A);
         FlagSend = 1;
         MotorOrderDirection = 0;//前：0  后：1  左：2  右： 3
+        timeFlag = 1;
 
         Beep_Flag = 1;
         Beep_Counter = 0;
@@ -298,6 +303,7 @@ UART1IntHandler(void)
         TimerEnable(TIMER0_BASE, TIMER_A);
         FlagSend =1;
         MotorOrderDirection = 2;//前：0  后：1  左：2  右： 3
+        timeFlag = 1;
 
         Beep_Flag = 1;
         Beep_Counter = 0;
@@ -314,6 +320,7 @@ UART1IntHandler(void)
         TimerEnable(TIMER0_BASE, TIMER_A);
         FlagSend = 1;
         MotorOrderDirection = 3;//前：0  后：1  左：2  右： 3
+        timeFlag = 1;
 
         Beep_Flag = 1;
         Beep_Counter = 0;
