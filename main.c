@@ -100,7 +100,7 @@ int main(void)
     MotorContolTimer(); //电机控制定时器初始化
     MotorSet(3,0,0);    //设置电机初始为制动
     Beep_Configure();   //蜂鸣器初始化
-    TimerDisable(TIMER1_BASE, TIMER_A);//关闭使能定时器
+    TimerEnable(TIMER1_BASE, TIMER_A);//关闭使能定时器
     /**
      * MPU6050初始化
      */

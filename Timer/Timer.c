@@ -85,7 +85,7 @@ void Timer0IntHandler(void)
     //清除标志位
     TimerIntClear(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
 
-    IntMasterDisable();
+    //IntMasterDisable();
     if(Flag_Stop==0)
     {
         if(Beep_Flag)
@@ -152,6 +152,8 @@ void Timer1IntHandler(void)
     //
     TimerIntClear(TIMER1_BASE, TIMER_TIMA_TIMEOUT);
 
+    UART0Send((uint8_t *)"\n UART0 Is 77!!\n\n ", 17);
+    UARTprintf("Hello 想不到吧\n");
     //
     // Update the interrupt status on the display.
     //
@@ -164,3 +166,5 @@ void Timer1IntHandler(void)
         UARTprintf("Ang%d",(int)(Counter/89.3));
     }
 }
+
+
