@@ -1,40 +1,42 @@
 /**
   ******************************************************************************
-  * ÎÄ¼şÃû³Ì: Timer.c
-  * ×÷    Õß: By Sw Young
-  * °æ    ±¾: V1.0
-  * ¹¦    ÄÜ:
-  * ±àĞ´ÈÕÆÚ: 2018.3.29
+  * æ–‡ä»¶åç¨‹: Timer.c
+  * ä½œ    è€…: By Sw Young
+  * ç‰ˆ    æœ¬: V1.0
+  * åŠŸ    èƒ½:
+  * ç¼–å†™æ—¥æœŸ: 2018.3.29
   ******************************************************************************
-  * ËµÃ÷£º
-  * Ó²¼şÆ½Ì¨£º
-  *   MCUc:TM4C123¡¢2ÏàËÄÏß²½½øµç»ú¡¢DRV8825µç»úÇı¶¯¡¢WiFi
-  * Èí¼şÉè¼ÆËµÃ÷£º
-  *   Í¨¹ıÎŞÏß¾«È·¿ØÖÆĞ¡³µµÄÇ°½ø¡¢ºóÍË¾àÀë£»×ó×ªÓÒ×ª½Ç¶È¡£
-  * Github£ºhttps://github.com/youngsw/Remote_Control_Car_PointRace_3_Car
+  * è¯´æ˜ï¼š
+  * ç¡¬ä»¶å¹³å°ï¼š
+  *   MCUc:TM4C123ã€2ç›¸å››çº¿æ­¥è¿›ç”µæœºã€DRV8825ç”µæœºé©±åŠ¨ã€WiFi
+  * è½¯ä»¶è®¾è®¡è¯´æ˜ï¼š
+  *   é€šè¿‡æ— çº¿ç²¾ç¡®æ§åˆ¶å°è½¦çš„å‰è¿›ã€åé€€è·ç¦»ï¼›å·¦è½¬å³è½¬è§’åº¦ã€‚
+  * Githubï¼šhttps://github.com/youngsw/Remote_Control_Car_PointRace_3_Car
   ******************************************************************************
 **/
 #include "timer.h"
 #include<limits.h>
 #include<stdlib.h>
 
-extern uint8_t MotorOrderDirection;        //Ç°£º0  ºó£º1  ×ó£º2  ÓÒ£º 3
-extern uint8_t MotorOrderDisplacement;     //Ç°ºó±íÊ¾¾àÀë£¬×óÓÒ±íÊ¾×ªÏò½Ç
+
+uint32_t runTime=0,runSpeed=0,runDistance=0;
+extern uint8_t MotorOrderDirection;        //å‰ï¼š0  åï¼š1  å·¦ï¼š2  å³ï¼š 3
+extern uint8_t MotorOrderDisplacement;     //å‰åè¡¨ç¤ºè·ç¦»ï¼Œå·¦å³è¡¨ç¤ºè½¬å‘è§’
 char Time_Flag = 0;
-uint32_t Counter = 0;
+uint32_t Counter = 0,runCounter=0;
 uint8_t  Beep_Flag = 0;
 uint8_t  Set_Low_Speed = 0,Set_Low_Speed_temp = 0;
 uint32_t Beep_Counter = 0;
 uint32_t Beep_Fre = 40;
-uint32_t Speed = 2;
+uint32_t Speed = 10000;
 extern uint8_t Flag_Stop;
 
 /**
-  * º¯ Êı Ãû:MotorContolTimer.c
-  * º¯Êı¹¦ÄÜ: µç»ú¶¨Ê±Æ÷
-  * ÊäÈë²ÎÊı: ÎŞ
-  * ·µ »Ø Öµ: ÎŞ
-  * Ëµ    Ã÷:
+  * å‡½ æ•° å:MotorContolTimer.c
+  * å‡½æ•°åŠŸèƒ½: ç”µæœºå®šæ—¶å™¨
+  * è¾“å…¥å‚æ•°: æ— 
+  * è¿” å› å€¼: æ— 
+  * è¯´    æ˜:
   *   By Sw Young
   *   2018.03.29
   */
@@ -56,7 +58,7 @@ void MotorContolTimer(void)
         TimerConfigure(TIMER0_BASE, TIMER_CFG_PERIODIC);
         TimerConfigure(TIMER1_BASE, TIMER_CFG_PERIODIC);
 
-        TimerLoadSet(TIMER0_BASE, TIMER_A,  SysCtlClockGet()/Speed-1);  //speed=20000£»  10KHz·½²¨
+        TimerLoadSet(TIMER0_BASE, TIMER_A,  SysCtlClockGet()/Speed-1);  //speed=20000ï¼›  10KHzæ–¹æ³¢
         TimerLoadSet(TIMER1_BASE, TIMER_A,  SysCtlClockGet()/10-1); //10HZ
 
        //
@@ -74,17 +76,17 @@ void MotorContolTimer(void)
         TimerEnable(TIMER1_BASE, TIMER_A);
 }
 /**
-  * º¯ Êı Ãû:Timer0IntHandler.c
-  * º¯Êı¹¦ÄÜ: µç»ú¶¨Ê±Æ÷ÖĞ¶Ï
-  * ÊäÈë²ÎÊı: ÎŞ
-  * ·µ »Ø Öµ: ÎŞ
-  * Ëµ    Ã÷:
+  * å‡½ æ•° å:Timer0IntHandler.c
+  * å‡½æ•°åŠŸèƒ½: ç”µæœºå®šæ—¶å™¨ä¸­æ–­
+  * è¾“å…¥å‚æ•°: æ— 
+  * è¿” å› å€¼: æ— 
+  * è¯´    æ˜:
   *   By Sw Young
   *   2018.03.29
   */
 void Timer0IntHandler(void)
 {
-    //Çå³ı±êÖ¾Î»
+    //æ¸…é™¤æ ‡å¿—ä½
     TimerIntClear(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
 
     //IntMasterDisable();
@@ -119,17 +121,20 @@ void Timer0IntHandler(void)
           if(Time_Flag>0)
           {
               Counter++;
-              if(Counter>65535)
+              if(Counter>UINT_MAX-5)
                   Counter=0;
-              GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_5, 0);//Ö´ĞĞÂö³åÀ´¿ØÖÆ×ªËÙ
-              GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_6, 0);//Ö´ĞĞÂö³åÀ´¿ØÖÆ×ªËÙ
+              runCounter++;
+              if(runCounter>UINT_MAX-5)
+                  runCounter=0;
+              GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_5, 0);//æ‰§è¡Œè„‰å†²æ¥æ§åˆ¶è½¬é€Ÿ
+              GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_6, 0);//æ‰§è¡Œè„‰å†²æ¥æ§åˆ¶è½¬é€Ÿ
              // GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1, 0);
 
           }
           else
           {
-              GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_5, GPIO_PIN_5);//Ö´ĞĞÂö³åÀ´¿ØÖÆ×ªËÙ
-              GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_6, GPIO_PIN_6);//Ö´ĞĞÂö³åÀ´¿ØÖÆ×ªËÙ
+              GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_5, GPIO_PIN_5);//æ‰§è¡Œè„‰å†²æ¥æ§åˆ¶è½¬é€Ÿ
+              GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_6, GPIO_PIN_6);//æ‰§è¡Œè„‰å†²æ¥æ§åˆ¶è½¬é€Ÿ
 
               //GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1, GPIO_PIN_1);
 
@@ -139,11 +144,11 @@ void Timer0IntHandler(void)
 
 }
 /**
-  * º¯ Êı Ãû:Timer1IntHandler.c
-  * º¯Êı¹¦ÄÜ: ´®¿Ú²ÎÊı·¢ËÍ¶¨Ê±Æ÷ÖĞ¶Ï
-  * ÊäÈë²ÎÊı: ÎŞ
-  * ·µ »Ø Öµ: ÎŞ
-  * Ëµ    Ã÷:
+  * å‡½ æ•° å:Timer1IntHandler.c
+  * å‡½æ•°åŠŸèƒ½: ä¸²å£å‚æ•°å‘é€å®šæ—¶å™¨ä¸­æ–­
+  * è¾“å…¥å‚æ•°: æ— 
+  * è¿” å› å€¼: æ— 
+  * è¯´    æ˜:
   *   By Sw Young
   *   2018.03.29
   */
@@ -158,29 +163,28 @@ void Timer1IntHandler(void)
     if(timeFlag>0&&Flag_Stop==0)
     {
         t_temp++;
-        if(t_temp==10)
+        if(t_temp==5)       //500mså‘é€ä¸€æ¬¡æ•°æ®
+        {
+
+            t_conter++;
+            if(t_conter>UINT_MAX-5)
+                t_conter=0;
+        }
+        if(t_temp==10)      //è®¡æ—¶1s
         {
             t_temp=0;
             t_conter++;
             if(t_conter>UINT_MAX-5)
                 t_conter=0;
         }
+        runDistance = runCounter*20/6400;
+        UARTprintf("\r\runDistance%d\n",runDistance);
+        runTime = t_conter;
+        UARTprintf("\r\runTime%d\n",runTime);
+        UARTprintf("\r\nrunSpeed%d\n",(Speed*40)/32000);
 
-        UARTprintf("\r\nHello Ïë²»µ½°É%d\n",t_conter);
     }
 
-
-    //
-    // Update the interrupt status on the display.
-    //
-    if(MotorOrderDirection==0||MotorOrderDirection==1)
-    {
-        UARTprintf("Dis%d",(Counter*20)/6400);
-    }
-    else if (MotorOrderDirection==2||MotorOrderDirection==3)
-    {
-        UARTprintf("Ang%d",(int)(Counter/89.3));
-    }
 }
 
 

@@ -260,8 +260,8 @@ UART1IntHandler(void)
     }
 
  //   UARTSend()
-    UART1Send("Received: ",10);
-    UART1Send(ReciveData_UART1, ReciveData_i_UART1);
+//    UART1Send("Received: ",10);
+//    UART1Send(ReciveData_UART1, ReciveData_i_UART1);
     if(ReciveData_UART1[0]=='F')
     {
         Direction_Set = 1;
@@ -330,7 +330,7 @@ UART1IntHandler(void)
     else if (ReciveData_UART1[0]=='T')
     {
 
-        Speed = ((ReciveData_UART1[1]-48)*1000+(ReciveData_UART1[2]-48)*100+(ReciveData_UART1[3]-48)*10+(ReciveData_UART1[4]-48))*15+2;
+        Speed = ((ReciveData_UART1[1]-48)*1000+(ReciveData_UART1[2]-48)*100+(ReciveData_UART1[3]-48)*10+(ReciveData_UART1[4]-48))*10+2;
         TimerLoadSet(TIMER0_BASE, TIMER_A,  SysCtlClockGet()/Speed-1);
 
         Beep_Flag = 1;

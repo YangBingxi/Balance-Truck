@@ -55,6 +55,7 @@ uint8_t Direction_Set = 0;
 
 /**
  * MPU6050相关
+ * 当前代码关闭了MPU6050的使用
  */
 uint16_t tmp;                   //温度
 short aacx,aacy,aacz;           //加速度传感器原始数据
@@ -184,7 +185,7 @@ int main(void)
             {
 //                UARTprintf("D%d",(Counter*20)/6400);
 //                UARTprintf("T%d",Counter/10);
-                //发送位移
+/*                //发送位移
                 CharNum = (Counter*20)/6400+1;   //做修改
                 CharTable[0] = 'D';
                 CharTable[1] = CharNum/100+48;
@@ -203,7 +204,7 @@ int main(void)
                 CharTable[4] = CharNum/10%10+48;
                 CharTable[5] = CharNum%10+48;
                 UART1Send(CharTable,10);
-
+*/
 //                OLED_ShowNum(28,3,(Counter*20)/6400,3,16);
 //                OLED_ShowNum(98,3,(int)(Counter/10),3,16);
             }
