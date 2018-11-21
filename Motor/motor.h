@@ -5,5 +5,8 @@
 
 void MotorInit(void);
 void MotorSet(uint8_t Motor,uint8_t Motor0Direction,uint8_t Motor1Direction);
+void followLineInit(void);
+void followLine();
+
 
 #endif

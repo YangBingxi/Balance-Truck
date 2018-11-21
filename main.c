@@ -52,7 +52,7 @@ extern uint8_t Beep_Flag;                  //蜂鸣器标志位
 uint8_t Flag_Stop = 0;                     //暂停标志
 uint8_t Car_Mode = 0;                      //小车模式控制位，默认为遥控控制
 uint8_t Direction_Set = 0;
-
+extern bool followLineFlag;
 /**
  * MPU6050相关
  * MPU6050的使用
@@ -104,6 +104,7 @@ int main(void)
     MotorInit();        //电机控制引脚初始化
     MotorContolTimer(); //电机控制定时器初始化
     MotorSet(3,0,0);    //设置电机初始为制动
+    followLineInit();   //巡线IO口初始化
     Beep_Configure();   //蜂鸣器初始化
     TimerEnable(TIMER1_BASE, TIMER_A);//关闭使能定时器
 
@@ -132,12 +133,18 @@ int main(void)
 
     while(1)    //Loop
     {
-        if(MotorOrderDirection==0)  //F
+        while(follo wLineFlag==true)
+        {
+            followLine();
+        }
+
+
+        if(MotorOrderDirection==0)  //B
         {
            // Counter = 0; //计数清零
             MotorSet(2,0,1);
         }
-        if(MotorOrderDirection==1)  //B
+        if(MotorOrderDirection==1)  //F
         {
            // Counter = 0; //计数清零
             MotorSet(2,1,0);
@@ -182,8 +189,6 @@ int main(void)
             }
             else
                 ;
-
-
         }
         if(Flag_Stop)           //暂停
         {

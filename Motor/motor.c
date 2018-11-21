@@ -114,3 +114,31 @@ void MotorSet(uint8_t Motor,uint8_t Motor0Direction,uint8_t Motor1Direction)
         GPIOPinWrite(GPIO_PORTC_BASE, GPIO_PIN_7, 0);           //低电平反转
     }
 }
+uint8_t aotoRun_F=0,aotoRun_B=0,aotoRun_R=0,aotoRun_L=0;
+void aotoRun()
+{
+    ;
+}
+
+void followLineInit(void)
+{
+    //使能GPIO外设
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
+
+    GPIOPinTypeGPIOInput(GPIO_PORTA_BASE, GPIO_PIN_5 | GPIO_PIN_6);
+    GPIODirModeSet(GPIO_PORTA_BASE, GPIO_PIN_5 | GPIO_PIN_6, GPIO_DIR_MODE_IN);
+    GPIOPadConfigSet(GPIO_PORTA_BASE, GPIO_PIN_5 | GPIO_PIN_6, GPIO_STRENGTH_2MA, GPIO_PIN_TYPE_STD_WPD);
+
+
+}
+bool followLineFlag=false;
+
+void followLine()
+{
+    MotorSet(2,1,0);    //设置行进方向向前
+    if(GPIOPinRead(GPIO_PORTA_BASE, GPIO_PIN_5)!=0)
+        MotorSet(2,1,1);
+    if(GPIOPinRead(GPIO_PORTA_BASE, GPIO_PIN_6)!=0)
+            MotorSet(2,0,0);
+    delay_ms(100);
+}
