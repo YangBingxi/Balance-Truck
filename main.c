@@ -55,16 +55,15 @@ uint8_t Direction_Set = 0;
 
 /**
  * MPU6050相关
- * 当前代码关闭了MPU6050的使用
+ * MPU6050的使用
  */
 uint16_t tmp;                   //温度
 short aacx,aacy,aacz;           //加速度传感器原始数据
 short gyrox,gyroy,gyroz;        //陀螺仪原始数据
-float pitch,roll,yaw;           //欧拉角
+float pitch,roll,yaw,pitchStd;           //欧拉角
 
 float parameter_Ang = 95.0;     //角度参数修正
 float parameter_Dis = 340.0;    //距离参数修正
-
 /**
   * 函 数 名:main.c
   * 函数功能: 主函数
@@ -75,12 +74,16 @@ float parameter_Dis = 340.0;    //距离参数修正
   *   2018.03.29
   */
 int main(void)
+
+
+
 {
     //
     // Enable lazy stacking for interrupt handlers.  This allows floating-point
     // instructions to be used within interrupt handlers, but at the expense of
     // extra stack usage.
     //
+    FPUEnable();        //开启浮点运算
     FPULazyStackingEnable();
     SysCtlClockSet(SYSCTL_SYSDIV_2_5|SYSCTL_USE_PLL|SYSCTL_XTAL_16MHZ|SYSCTL_OSC_MAIN);
     //
@@ -95,24 +98,36 @@ int main(void)
 
     //GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_2, GPIO_PIN_2);
 
-    Uart0Iint();        //串口1初始化
-    Uart1Iint();        //串口2初始化
+    Uart0Iint();        //串口0初始化
+    Uart1Iint();        //串口1初始化
+    UART2Iint();        //串口1初始化
     MotorInit();        //电机控制引脚初始化
     MotorContolTimer(); //电机控制定时器初始化
     MotorSet(3,0,0);    //设置电机初始为制动
     Beep_Configure();   //蜂鸣器初始化
     TimerEnable(TIMER1_BASE, TIMER_A);//关闭使能定时器
+
+
+
     /**
      * MPU6050初始化
      */
-//    MPU_Init();
-//    while(mpu_dmp_init())
-//    {//进入while，检测不到MPU6050
-//        GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1, ~GPIOPinRead(GPIO_PORTF_BASE, GPIO_PIN_1));
-//        delay_ms(1000);
-//        //放置mpu错误报警
-//    }//放置正常报警
-//    UARTprintf("mpu is ok!");
+    MPU_Init();
+    while(mpu_dmp_init())               //已关闭dmp的自检
+    {//进入while，检测不到MPU6050
+        GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_1, ~GPIOPinRead(GPIO_PORTF_BASE, GPIO_PIN_1));
+        delay_ms(1000);
+        //放置mpu错误报警
+    }//放置正常报警
+    UARTprintf("mpu is ok!");
+    delay_ms(1000);delay_ms(1000);delay_ms(1000);delay_ms(1000);delay_ms(1000);delay_ms(1000);delay_ms(1000);delay_ms(1000);//初始化8s
+    if(mpu_dmp_get_data(&pitch,&roll,&yaw)==0)
+    {
+        //temp=MPU_Get_Temperature();   //得到温度值
+        MPU_Get_Accelerometer(&aacx,&aacy,&aacz);   //得到加速度传感器数据
+        MPU_Get_Gyroscope(&gyrox,&gyroy,&gyroz);    //得到陀螺仪数据
+    }
+    pitchStd = pitch;
     //UARTprintf("TEST");   //UARTprint函数输出重定向至UART1
 
     while(1)    //Loop
@@ -235,17 +250,16 @@ int main(void)
 //                OLED_ShowNum(28,6,(int)(Counter/89.3),3,16);
 //                OLED_ShowNum(98,3,(int)(Counter/10),3,16);
             }
-            if(mpu_dmp_get_data(&pitch,&roll,&yaw)==0)
-            {
-                //temp=MPU_Get_Temperature();   //得到温度值
-                MPU_Get_Accelerometer(&aacx,&aacy,&aacz);   //得到加速度传感器数据
-                MPU_Get_Gyroscope(&gyrox,&gyroy,&gyroz);    //得到陀螺仪数据
-                if(1){UARTprintf("Pitch  %d  ", (int)pitch);}
-                if(1){UARTprintf("Roll  %d  ", (int)roll);}
-                if(1){UARTprintf("Yaw  %d\n", (int)yaw);}
-            }//end if
         }
-
+        if(mpu_dmp_get_data(&pitch,&roll,&yaw)==0)
+        {
+            //temp=MPU_Get_Temperature();   //得到温度值
+            MPU_Get_Accelerometer(&aacx,&aacy,&aacz);   //得到加速度传感器数据
+            MPU_Get_Gyroscope(&gyrox,&gyroy,&gyroz);    //得到陀螺仪数据
+//            if(1){UARTprintf("Pitch  %d  ", (int)pitch);}
+//            if(1){UARTprintf("Roll  %d  ", (int)roll);}
+//            if(1){UARTprintf("Yaw  %d\n", (int)yaw);}
+        }//end if
     }
 
   //  return 0;
