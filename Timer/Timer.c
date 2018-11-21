@@ -165,30 +165,6 @@ void Timer1IntHandler(void)
     if(timeFlag>0&&Flag_Stop==0)
     {
         t_temp++;
-        if(t_temp==5)       //500ms发送一次数据
-        {
-            runDistance = runCounter*20/6400;
-            UARTprintf("t5.txt=\"%d\"",runDistance);
-            UARTprintf("%c",0xFF);UARTprintf("%c",0xFF);UARTprintf("%c",0xFF);
-
-            runTime = t_conter;
-            UARTprintf("t2.txt=\"%d\"",runTime);
-            UARTprintf("%c",0xFF);UARTprintf("%c",0xFF);UARTprintf("%c",0xFF);
-
-            runSpeed = (Speed*40)/32000;
-            UARTprintf("t8.txt=\"%d\"",runSpeed);
-            UARTprintf("%c",0xFF);UARTprintf("%c",0xFF);UARTprintf("%c",0xFF);
-
-//            Height = Height/(sin(0.8));            //sin函数卡死
-            UARTprintf("t11.txt=\"%d\"",(int)Height);
-            UARTprintf("%c",0xFF);UARTprintf("%c",0xFF);UARTprintf("%c",0xFF);
-
-            UARTprintf("add 3,0,%d",runSpeed*5);//在串口屏上放大显示
-            UARTprintf("%c",0xFF);UARTprintf("%c",0xFF);UARTprintf("%c",0xFF);
-
-            UARTprintf("add 3,1,%d",Height*8);    //在串口屏上放大显示
-            UARTprintf("%c",0xFF);UARTprintf("%c",0xFF);UARTprintf("%c",0xFF);
-        }
         if(t_temp==10)      //计时1s
         {
             t_temp=0;
@@ -197,7 +173,27 @@ void Timer1IntHandler(void)
                 t_conter=0;
         }
 
+        runDistance = runCounter*20/6400;
+        UARTprintf("t5.txt=\"%d\"",runDistance);
+        UARTprintf("%c",0xFF);UARTprintf("%c",0xFF);UARTprintf("%c",0xFF);
 
+        runTime = t_conter;
+        UARTprintf("t2.txt=\"%d\"",runTime);
+        UARTprintf("%c",0xFF);UARTprintf("%c",0xFF);UARTprintf("%c",0xFF);
+
+        runSpeed = (Speed*40)/32000;
+        UARTprintf("t8.txt=\"%d\"",runSpeed);
+        UARTprintf("%c",0xFF);UARTprintf("%c",0xFF);UARTprintf("%c",0xFF);
+
+//            Height = Height/(sin(0.8));            //sin函数卡死
+        UARTprintf("t11.txt=\"%d\"",(int)Height);
+        UARTprintf("%c",0xFF);UARTprintf("%c",0xFF);UARTprintf("%c",0xFF);
+
+        UARTprintf("add 3,0,%d",runSpeed*5);//在串口屏上放大显示
+        UARTprintf("%c",0xFF);UARTprintf("%c",0xFF);UARTprintf("%c",0xFF);
+
+        UARTprintf("add 3,1,%d",Height*8);    //在串口屏上放大显示
+        UARTprintf("%c",0xFF);UARTprintf("%c",0xFF);UARTprintf("%c",0xFF);
 
 
     }
