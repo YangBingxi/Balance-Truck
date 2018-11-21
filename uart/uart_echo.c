@@ -457,7 +457,7 @@ void Uart1Iint(void)
 //UART2
 uint8_t ReciveData_UART2[16];
 uint8_t ReciveData_i_UART2 = 0;
-extern double Height;
+extern uint32_t Height;
 
 //*****************************************************************************
 //

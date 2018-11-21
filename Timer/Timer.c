@@ -19,8 +19,7 @@
 #include <stdlib.h>
 //#include "math.h"
 
-uint32_t runTime=0,runSpeed=0,runDistance=0;
-double Height=0;
+uint32_t runTime=0,runSpeed=0,runDistance=0,Height=0;
 extern uint8_t MotorOrderDirection;        //前：0  后：1  左：2  右： 3
 extern uint8_t MotorOrderDisplacement;     //前后表示距离，左右表示转向角
 char Time_Flag = 0;
@@ -186,7 +185,7 @@ void Timer1IntHandler(void)
         UARTprintf("%c",0xFF);UARTprintf("%c",0xFF);UARTprintf("%c",0xFF);
 
 //            Height = Height/(sin(0.8));            //sin函数卡死
-        UARTprintf("t11.txt=\"%d\"",(int)Height);
+        UARTprintf("t11.txt=\"%d\"",Height);
         UARTprintf("%c",0xFF);UARTprintf("%c",0xFF);UARTprintf("%c",0xFF);
 
         UARTprintf("add 3,0,%d",runSpeed*5);//在串口屏上放大显示
